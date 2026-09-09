@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Mon IA (Gemini 3.6 Flash)</title>
+  <title>Mon IA</title>
   <style>
     body { font-family: sans-serif; background: #121212; color: #fff; margin: 0; padding: 15px; }
     .chat-box { height: 50vh; overflow-y: auto; border: 1px solid #333; padding: 10px; margin-bottom: 10px; border-radius: 8px; display: flex; flex-direction: column; }
@@ -18,7 +18,7 @@
 </head>
 <body>
 
-  <h3>Mon IA (Gemini 3.6 Flash)</h3>
+  <h3>Mon IA (Gemini 1.5 Flash)</h3>
   
   <input type="password" id="apiKey" placeholder="Collez votre clé API Gemini ici">
   
@@ -46,8 +46,8 @@
 
       const loadingMsg = appendMessage("[Réflexion en cours...]", 'bot');
 
-      // Utilisation du modèle recommandé par le serveur
-      const model = 'gemini-3.6-flash';
+      // Modèle de votre liste supporté en HTTP standard
+      const model = 'gemini-1.5-flash';
 
       const payload = {
         contents: [{ parts: [{ text: input }] }]
