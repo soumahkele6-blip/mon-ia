@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Gemini Multi-Model Pipeline</title>
+  <title>Gemini Free Tier Orchestrator</title>
   <style>
     :root {
       --bg: #0f172a;
@@ -17,255 +17,102 @@
       --warning: #fbbf24;
     }
 
-    * {
-      box-sizing: border-box;
-      margin: 0;
-      padding: 0;
-      font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
-    }
-
-    body {
-      background-color: var(--bg);
-      color: var(--text);
-      display: flex;
-      justify-content: center;
-      padding: 2rem 1rem;
-      min-height: 100vh;
-    }
-
-    .container {
-      width: 100%;
-      max-width: 900px;
-      display: flex;
-      flex-direction: column;
-      gap: 1.5rem;
-    }
-
-    header {
-      text-align: center;
-      margin-bottom: 1rem;
-    }
-
-    header h1 {
-      font-size: 2rem;
-      background: linear-gradient(90deg, var(--primary), var(--accent));
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-      margin-bottom: 0.5rem;
-    }
-
-    header p {
-      color: var(--muted);
-      font-size: 0.95rem;
-    }
-
-    .card {
-      background-color: var(--card);
-      border: 1px solid var(--border);
-      border-radius: 12px;
-      padding: 1.5rem;
-      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.25);
-    }
-
-    label {
-      display: block;
-      font-weight: 600;
-      margin-bottom: 0.5rem;
-      color: var(--text);
-    }
-
-    input, textarea, select {
-      width: 100%;
-      padding: 0.75rem 1rem;
-      background: #0b1120;
-      border: 1px solid var(--border);
-      border-radius: 8px;
-      color: var(--text);
-      font-size: 0.95rem;
-      outline: none;
-      transition: border-color 0.2s;
-    }
-
-    input:focus, textarea:focus, select:focus {
-      border-color: var(--primary);
-    }
-
-    textarea {
-      resize: vertical;
-      min-height: 100px;
-    }
-
-    .grid-2 {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 1rem;
-    }
-
-    @media (max-width: 640px) {
-      .grid-2 { grid-template-columns: 1fr; }
-    }
-
-    button {
-      background: linear-gradient(90deg, var(--primary), var(--accent));
-      color: #000;
-      font-weight: 700;
-      border: none;
-      padding: 0.85rem 1.5rem;
-      border-radius: 8px;
-      cursor: pointer;
-      font-size: 1rem;
-      transition: opacity 0.2s, transform 0.1s;
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      gap: 0.5rem;
-      width: 100%;
-    }
-
-    button:hover { opacity: 0.9; }
-    button:active { transform: scale(0.99); }
+    * { box-sizing: border-box; margin: 0; padding: 0; font-family: system-ui, -apple-system, sans-serif; }
+    body { background-color: var(--bg); color: var(--text); display: flex; justify-content: center; padding: 2rem 1rem; min-height: 100vh; }
+    .container { width: 100%; max-width: 900px; display: flex; flex-direction: column; gap: 1.5rem; }
+    header { text-align: center; margin-bottom: 1rem; }
+    header h1 { font-size: 2rem; background: linear-gradient(90deg, var(--primary), var(--accent)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; margin-bottom: 0.5rem; }
+    header p { color: var(--muted); font-size: 0.95rem; }
+    .card { background-color: var(--card); border: 1px solid var(--border); border-radius: 12px; padding: 1.5rem; box-shadow: 0 4px 20px rgba(0, 0, 0, 0.25); }
+    label { display: block; font-weight: 600; margin-bottom: 0.5rem; }
+    input, textarea, select { width: 100%; padding: 0.75rem 1rem; background: #0b1120; border: 1px solid var(--border); border-radius: 8px; color: var(--text); font-size: 0.95rem; outline: none; margin-bottom: 1rem; }
+    input:focus, textarea:focus, select:focus { border-color: var(--primary); }
+    textarea { resize: vertical; min-height: 100px; }
+    .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
+    @media (max-width: 640px) { .grid-2 { grid-template-columns: 1fr; } }
+    button { background: linear-gradient(90deg, var(--primary), var(--accent)); color: #000; font-weight: 700; border: none; padding: 0.85rem 1.5rem; border-radius: 8px; cursor: pointer; font-size: 1rem; width: 100%; }
     button:disabled { opacity: 0.5; cursor: not-allowed; }
-
-    .pipeline-step {
-      margin-top: 1.5rem;
-      border-left: 3px solid var(--border);
-      padding-left: 1.25rem;
-      position: relative;
-    }
-
-    .pipeline-step.active {
-      border-left-color: var(--primary);
-    }
-
-    .step-header {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      margin-bottom: 0.5rem;
-    }
-
-    .badge {
-      display: inline-block;
-      font-size: 0.75rem;
-      font-weight: 700;
-      padding: 0.25rem 0.6rem;
-      border-radius: 999px;
-      text-transform: uppercase;
-      background: #334155;
-      color: var(--text);
-    }
-
-    .badge.pro { background: #4f46e5; color: #fff; }
-    .badge.flash { background: #0284c7; color: #fff; }
+    .pipeline-step { margin-top: 1.5rem; border-left: 3px solid var(--border); padding-left: 1.25rem; }
+    .step-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 0.5rem; }
+    .badge { font-size: 0.75rem; font-weight: 700; padding: 0.25rem 0.6rem; border-radius: 999px; background: #334155; color: var(--text); }
     .badge.running { background: var(--warning); color: #000; }
     .badge.done { background: var(--success); color: #000; }
-
-    .step-output {
-      background: #0b1120;
-      border: 1px solid var(--border);
-      border-radius: 8px;
-      padding: 1rem;
-      font-size: 0.9rem;
-      line-height: 1.6;
-      white-space: pre-wrap;
-      max-height: 300px;
-      overflow-y: auto;
-      color: #cbd5e1;
-    }
+    .step-output { background: #0b1120; border: 1px solid var(--border); border-radius: 8px; padding: 1rem; font-size: 0.9rem; line-height: 1.6; white-space: pre-wrap; max-height: 300px; overflow-y: auto; color: #cbd5e1; }
   </style>
 </head>
 <body>
 
   <div class="container">
     <header>
-      <h1>Gemini Multi-Model Orchestrator</h1>
-      <p>Chaînage combiné : Modèle de réflexion (Pro) ➔ Modèle de synthèse (Flash)</p>
+      <h1>Pipeline Gemini (Compte Gratuit)</h1>
+      <p>Modèle Puissant (gemini-2.5-flash) ➔ Synthèse Rapide (gemini-2.5-flash-lite)</p>
     </header>
 
-    <!-- Configuration & Entrées -->
     <div class="card">
-      <div style="margin-bottom: 1rem;">
-        <label for="apiKey">Clé API Google AI Studio</label>
-        <input type="password" id="apiKey" placeholder="AIzaSy..." />
-      </div>
+      <label for="apiKey">Clé API Google AI Studio</label>
+      <input type="password" id="apiKey" placeholder="AIzaSy..." />
 
-      <div class="grid-2" style="margin-bottom: 1rem;">
+      <div class="grid-2">
         <div>
-          <label for="model1">1er Modèle (Analyse / Réflexion)</label>
+          <label for="model1">1er Modèle (Le plus puissant gratuit)</label>
           <select id="model1">
-            <option value="gemini-3.1-pro-preview">gemini-3.1-pro-preview (Recommandé)</option>
-            <option value="gemini-2.5-pro">gemini-2.5-pro</option>
-            <option value="deep-research-max-preview-04-2026">deep-research-max-preview-04-2026</option>
+            <option value="gemini-2.5-flash" selected>gemini-2.5-flash (Recommandé)</option>
+            <option value="gemini-flash-latest">gemini-flash-latest</option>
+            <option value="gemini-2.5-pro">gemini-2.5-pro (Si quota dispo)</option>
           </select>
         </div>
         <div>
-          <label for="model2">2e Modèle (Synthèse / Action)</label>
+          <label for="model2">2e Modèle (Synthèse rapide)</label>
           <select id="model2">
-            <option value="gemini-3.8-flash">gemini-3.8-flash (Recommandé)</option>
-            <option value="gemini-3.5-flash">gemini-3.5-flash</option>
+            <option value="gemini-2.5-flash-lite" selected>gemini-2.5-flash-lite (Rapide)</option>
             <option value="gemini-2.5-flash">gemini-2.5-flash</option>
           </select>
         </div>
       </div>
 
-      <div style="margin-bottom: 1.25rem;">
-        <label for="promptInput">Votre question ou sujet de travail</label>
-        <textarea id="promptInput" placeholder="Ex: Propose un plan complet pour lancer une startup SaaS dans le domaine de la logistique..."></textarea>
-      </div>
+      <label for="promptInput">Votre question ou sujet</label>
+      <textarea id="promptInput" placeholder="Ex: Propose une stratégie détaillée pour un nouveau projet..."></textarea>
 
-      <button id="runBtn" onclick="runPipeline()">Lancer le pipeline combiné ⚡</button>
+      <button id="runBtn" onclick="runPipeline()">Lancer le pipeline ⚡</button>
     </div>
 
-    <!-- Résultats en direct -->
     <div class="card" id="resultsSection" style="display: none;">
-      <h2 style="font-size: 1.2rem; margin-bottom: 1rem;">Exécution du Pipeline</h2>
+      <h2 style="font-size: 1.2rem; margin-bottom: 1rem;">Résultats</h2>
 
       <!-- Étape 1 -->
-      <div class="pipeline-step" id="step1Container">
+      <div class="pipeline-step">
         <div class="step-header">
-          <div>
-            <span class="badge pro" id="badgeModel1">Modèle 1</span>
-            <strong style="margin-left: 0.5rem;">Étape 1 : Analyse approfondie</strong>
-          </div>
-          <span class="badge" id="statusStep1">En attente</span>
+          <div><strong id="labelModel1">Étape 1 : Analyse</strong></div>
+          <span class="badge" id="status1">En attente</span>
         </div>
-        <div class="step-output" id="outStep1">En attente de démarrage...</div>
+        <div class="step-output" id="out1">...</div>
       </div>
 
       <!-- Étape 2 -->
-      <div class="pipeline-step" id="step2Container" style="margin-top: 2rem;">
+      <div class="pipeline-step" style="margin-top: 2rem;">
         <div class="step-header">
-          <div>
-            <span class="badge flash" id="badgeModel2">Modèle 2</span>
-            <strong style="margin-left: 0.5rem;">Étape 2 : Plan d'action & Synthèse finale</strong>
-          </div>
-          <span class="badge" id="statusStep2">En attente</span>
+          <div><strong id="labelModel2">Étape 2 : Plan d'action</strong></div>
+          <span class="badge" id="status2">En attente</span>
         </div>
-        <div class="step-output" id="outStep2">En attente des résultats de l'étape 1...</div>
+        <div class="step-output" id="out2">...</div>
       </div>
     </div>
   </div>
 
   <script>
-    // Appel générique vers l'API Gemini
     async function callGemini(modelName, prompt, apiKey) {
       const url = `https://generativelanguage.googleapis.com/v1beta/models/${modelName}:generateContent?key=${apiKey}`;
-      
       const response = await fetch(url, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          contents: [{ parts: [{ text: prompt }] }]
-        })
+        body: JSON.stringify({ contents: [{ parts: [{ text: prompt }] }] })
       });
 
-      if (!response.ok) {
-        const errorData = await response.json().catch(() => ({}));
-        throw new Error(errorData.error?.message || `Erreur HTTP ${response.status}`);
-      }
-
       const data = await response.json();
-      return data.candidates?.[0]?.content?.parts?.[0]?.text || "Aucune réponse générée.";
+      if (!response.ok) {
+        throw new Error(data.error?.message || `Erreur HTTP ${response.status}`);
+      }
+      return data.candidates?.[0]?.content?.parts?.[0]?.text || "Aucune réponse.";
     }
 
     async function runPipeline() {
@@ -275,71 +122,48 @@
       const model2 = document.getElementById('model2').value;
       const runBtn = document.getElementById('runBtn');
 
-      if (!apiKey) {
-        alert("Veuillez renseigner votre clé API.");
-        return;
-      }
-      if (!prompt) {
-        alert("Veuillez saisir une requête.");
+      if (!apiKey || !prompt) {
+        alert("Veuillez saisir votre clé API et votre texte.");
         return;
       }
 
-      // Initialisation de l'affichage
       document.getElementById('resultsSection').style.display = 'block';
-      document.getElementById('badgeModel1').innerText = model1;
-      document.getElementById('badgeModel2').innerText = model2;
-      
-      const status1 = document.getElementById('statusStep1');
-      const status2 = document.getElementById('statusStep2');
-      const out1 = document.getElementById('outStep1');
-      const out2 = document.getElementById('outStep2');
+      const status1 = document.getElementById('status1');
+      const status2 = document.getElementById('status2');
+      const out1 = document.getElementById('out1');
+      const out2 = document.getElementById('out2');
 
       status1.className = 'badge running';
-      status1.innerText = 'Génération en cours...';
-      out1.innerText = 'Appel au modèle Pro...';
-
+      status1.innerText = 'Génération...';
+      out1.innerText = `Appel à ${model1}...`;
       status2.className = 'badge';
       status2.innerText = 'En attente';
-      out2.innerText = 'En attente des résultats de l\'étape 1...';
-
+      out2.innerText = 'En attente...';
       runBtn.disabled = true;
 
       try {
-        // --- ÉTAPE 1 : Le modèle Pro fait la réflexion complexe ---
-        const promptEtape1 = `Tu es un expert stratégique de haut niveau. Effectue une analyse détaillée et exhaustive sur le sujet suivant :\n\n${prompt}`;
-        const reponsePro = await callGemini(model1, promptEtape1, apiKey);
-        
-        out1.innerText = reponsePro;
+        // Étape 1 avec le modèle puissant
+        const prompt1 = `Tu es un expert d'élite. Analyse en détail le sujet suivant :\n\n${prompt}`;
+        const rep1 = await callGemini(model1, prompt1, apiKey);
+        out1.innerText = rep1;
         status1.className = 'badge done';
         status1.innerText = 'Terminé ✓';
 
-        // --- ÉTAPE 2 : Le modèle Flash synthétise et prépare l'action ---
+        // Étape 2 avec le modèle flash
         status2.className = 'badge running';
-        status2.innerText = 'Génération en cours...';
-        out2.innerText = 'Synthèse par le modèle Flash en cours...';
+        status2.innerText = 'Synthèse...';
+        out2.innerText = `Appel à ${model2}...`;
 
-        const promptEtape2 = `Voici une analyse détaillée issue d'une réflexion stratégique :\n\n"""\n${reponsePro}\n"""\n\nEn tant qu'assistant de productivité rapide, transforme cette analyse en un plan d'action concis :
-1. Résumé en 3 puces clés.
-2. Une feuille de route d'exécution en 5 étapes numérotées.
-3. Les 3 pièges à éviter absolument.`;
+        const prompt2 = `Voici une analyse détaillée :\n"""\n${rep1}\n"""\n\nSynthétise cette analyse en :
+1. Les 3 points clés à retenir.
+2. Un plan d'action immédiat en 4 étapes claires.`;
 
-        const reponseFlash = await callGemini(model2, promptEtape2, apiKey);
-
-        out2.innerText = reponseFlash;
+        const rep2 = await callGemini(model2, prompt2, apiKey);
+        out2.innerText = rep2;
         status2.className = 'badge done';
         status2.innerText = 'Terminé ✓';
-
       } catch (err) {
-        alert("Une erreur s'est produite : " + err.message);
-        if (status1.innerText === 'Génération en cours...') {
-          status1.className = 'badge';
-          status1.innerText = 'Échec';
-          out1.innerText = err.message;
-        } else {
-          status2.className = 'badge';
-          status2.innerText = 'Échec';
-          out2.innerText = err.message;
-        }
+        alert("Erreur : " + err.message);
       } finally {
         runBtn.disabled = false;
       }
